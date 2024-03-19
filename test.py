@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 conn = sqlite3.connect('vendas.db')
 df_sqlite = pd.read_sql_query("SELECT * FROM vendas", conn)
 
-df_csv = pd.read_csv('vendas_csv.csv')
+df_csv = pd.read_csv('vendas_db.csv')
 
 print("Primeiras linhas dos dados do banco de dados SQLite:")
 print(df_sqlite.head())
