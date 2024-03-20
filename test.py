@@ -8,7 +8,7 @@ df_sqlite = pd.read_sql_query("SELECT * FROM vendas", conn)
 df_csv = pd.read_csv('vendas_db.csv')
 
 print("Primeiras linhas dos dados do banco de dados SQLite:")
-print(df_sqlite.head())
+print(df_sqlite.head(10))
 
 print("\nPrimeiras linhas dos dados do arquivo CSV:")
 print(df_csv.head())
