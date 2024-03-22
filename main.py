@@ -15,8 +15,8 @@ df_sqlite['valor_total'] = df_sqlite['preco'] * df_sqlite['quantidade']
 
 print("\n" * 1)  # Adding spacing between DataFrames
 # Printing table name before printing SQLite DataFrame
-print("Tabela SQLite: vendas")
-print("--------------------------------------------------------------------------------")
+print("Tabela SQLite: vendas_db_sqlite")
+print("---------------------------------------------------------------------------------------------")
 print(df_sqlite.head())
 print("\n" * 2)  # Adding spacing between DataFrames
 
@@ -37,8 +37,8 @@ df_csv = df_csv[cols]
 df_csv['valor_total'] = df_csv['preco'] * df_csv['quantidade']
 
 # Printing table name before printing CSV DataFrame
-print("Tabela CSV: vendas_df")
-print("--------------------------------------------------------------------------------")
+print("Tabela CSV: vendas_df_csv")
+print("---------------------------------------------------------------------------------------------")
 print(df_csv.head())
 print("\n" * 2)  # Adding spacing between DataFrames
 
@@ -47,7 +47,7 @@ df_combined = pd.concat([df_sqlite, df_csv], ignore_index=True)
 
 # Printing the combined DataFrame
 print("Tabela combinada:")
-print("--------------------------------------------------------------------------------")
+print("---------------------------------------------------------------------------------------------")
 print(df_combined)
 print("\n" * 2)  # Adding spacing between DataFrames
 
@@ -57,16 +57,22 @@ df_combined['data_compra'] = pd.to_datetime(df_combined['data_compra'])
 # Extracting the month from the purchase date
 df_combined['mes_compra'] = df_combined['data_compra'].dt.month
 
-# Calculating the total sales value per customer
+# Calculating total sales value per customer
 clientes_lucrativos = df_combined.groupby('cliente_nome')['valor_total'].sum().reset_index()
 
 # Sort customers based on total sales value (highest to lowest)
 clientes_lucrativos = clientes_lucrativos.sort_values(by='valor_total', ascending=False)
 
-# Printing the most profitable customers
+# Resetting the index to get numeric IDs for customers
+clientes_lucrativos.reset_index(inplace=True)
+
+# Renaming the index column to 'ID'
+clientes_lucrativos.rename(columns={'index': 'ID'}, inplace=True)
+
+# Printing the most profitable customers with ID
 print("Clientes mais lucrativos:")
-print("------------------------------")
-print(clientes_lucrativos.head())
+print("--------------------------------------")
+print(clientes_lucrativos[['ID', 'cliente_nome', 'valor_total']].head())
 print("\n" * 2)  # Adding spacing between DataFrames
 
 # Calculating total sales per month to analyze sales seasonality
@@ -75,4 +81,4 @@ vendas_por_mes = df_combined.groupby('mes_compra')['valor_total'].sum().reset_in
 # Printing sales seasonality by month
 print("Sazonalidade de vendas por mês:")
 print("----------------------------------")
-print(vendas_por_mes)
+print(vendas_por_mes.to_string(index=False, header=["Mês", "Total de Vendas"]))
