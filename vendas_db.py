@@ -1,8 +1,10 @@
 import sqlite3
+import random
+import string
 
-conn = sqlite3.connect('vendas.db')
+# conn = sqlite3.connect('vendas.db')
 
-cursor = conn.cursor()
+# cursor = conn.cursor()
 
 # cursor.execute('''
 # CREATE TABLE vendas (
@@ -74,3 +76,31 @@ cursor = conn.cursor()
 # conn.commit()
 
 # conn.close()
+
+
+def generate_email():
+    domain = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'example.com']
+    username = ''.join(random.choice(string.ascii_letters) for _ in range(8))
+    return f"{username}@{random.choice(domain)}"
+
+conn = sqlite3.connect('vendas.db')
+cursor = conn.cursor()
+
+cursor.execute("PRAGMA table_info(vendas)")
+columns = cursor.fetchall()
+email_column_exists = any('email' in col for col in columns)
+if not email_column_exists:
+    cursor.execute('ALTER TABLE vendas ADD COLUMN email TEXT')
+
+    cursor.execute('SELECT id FROM vendas')
+    vendas_ids = cursor.fetchall()
+
+    for venda_id in vendas_ids:
+        email = generate_email()
+        cursor.execute("UPDATE vendas SET email=? WHERE id=?", (email, venda_id[0]))
+
+    conn.commit()
+
+conn.close()
+
+print("E-mails fictícios adicionados com sucesso à tabela de vendas!")
