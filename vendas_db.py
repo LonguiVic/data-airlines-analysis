@@ -1,4 +1,5 @@
 import sqlite3
+import random
 
 # Conectar ao banco de dados
 conn = sqlite3.connect('vendas.db')
@@ -66,4 +67,30 @@ for cliente in clientes:
 
 # Confirmar as alterações
 conn.commit()
+conn.close()
+
+# Conectar ao banco de dados SQLite
+conn = sqlite3.connect('vendas.db')
+cursor = conn.cursor()
+
+# 1. Adicionar o campo "estado" à tabela existente
+cursor.execute('''ALTER TABLE vendas ADD COLUMN estado TEXT''')
+
+# 2. Gerar estados aleatórios para cada cliente
+estados = [
+    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG',
+    'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+] # Lista de estados brasileiros, por exemplo
+cursor.execute("SELECT id FROM vendas")
+clientes = cursor.fetchall()
+
+# 3. Atualizar a tabela existente com os estados aleatórios
+for cliente in clientes:
+    estado_aleatorio = random.choice(estados)
+    cursor.execute("UPDATE vendas SET estado = ? WHERE id = ?", (estado_aleatorio, cliente[0]))
+
+# Confirmar a transação
+conn.commit()
+
+# Fechar a conexão com o banco de dados
 conn.close()
