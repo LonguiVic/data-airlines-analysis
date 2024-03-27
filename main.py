@@ -3,10 +3,10 @@ import sqlite3
 
 import pandas as pd
 
-from sazonalidade_vendas import plot_sazonalidade_vendas
-from top_10_clientes import criar_grafico_top_10_clientes
-from total_vendas_estado import plot_vendas_por_estado
-from total_vendas_produto import criar_grafico_vendas_por_produto
+from graphs.sazonalidade_vendas import plot_sazonalidade_vendas
+from graphs.top_10_clientes import criar_grafico_top_10_clientes
+from graphs.total_vendas_estado import plot_vendas_por_estado
+from graphs.total_vendas_produto import gerar_grafico_vendas_por_produto
 
 conn = sqlite3.connect('vendas.db')
 
@@ -63,11 +63,6 @@ vendas_por_estado = vendas_por_estado.rename(columns={'valor_total': 'Total de v
 # Total de vendas por produto
 vendas_por_produto = df_combined.groupby('produto')['valor_total'].sum().reset_index()
 
-# Calculando a porcentagem de vendas de cada produto em relação ao total
-total_vendas = vendas_por_produto['valor_total'].sum()
-vendas_por_produto['porcentagem'] = vendas_por_produto['valor_total'] / total_vendas * 100
-
-
 
 
 plot_sazonalidade_vendas(vendas_por_mes)
@@ -76,4 +71,4 @@ criar_grafico_top_10_clientes(clientes_lucrativos)
 
 plot_vendas_por_estado(vendas_por_estado)
 
-# criar_grafico_vendas_por_produto(vendas_por_produto)
+gerar_grafico_vendas_por_produto (df_combined)
