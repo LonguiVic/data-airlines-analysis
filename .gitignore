@@ -1,2 +1,10 @@
 env
-test
+test.py
+top_10_clientes.html
+vendas_por_estado.html
+vendas_por_produto.html
+sazonalidade_vendas.html
+grafico_clientes_por_estado.html
+grafico_linha.html
+grafico_vendas_por_produto.html
+main.html

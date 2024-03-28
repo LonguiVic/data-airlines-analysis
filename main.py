@@ -3,10 +3,11 @@ import sqlite3
 
 import pandas as pd
 
-from graphs.sazonalidade_vendas import plot_sazonalidade_vendas
-from graphs.top_10_clientes import criar_grafico_top_10_clientes
-from graphs.total_vendas_estado import plot_vendas_por_estado
-from graphs.total_vendas_produto import gerar_grafico_vendas_por_produto
+from graphs.analise_de_vendas.sazonalidade_vendas import plot_sazonalidade_vendas
+from graphs.analise_de_clientes.top_10_clientes import criar_grafico_top_10_clientes
+from graphs.analise_de_vendas.total_vendas_estado import plot_vendas_por_estado
+from graphs.analise_de_vendas.total_vendas_produto import gerar_grafico_vendas_por_produto
+from graphs.analise_de_clientes.contagem_clientes_estado import criar_grafico_contagem_clientes_estado
 
 conn = sqlite3.connect('vendas.db')
 
@@ -62,6 +63,14 @@ vendas_por_estado = vendas_por_estado.rename(columns={'valor_total': 'Total de v
 
 # Total de vendas por produto
 vendas_por_produto = df_combined.groupby('produto')['valor_total'].sum().reset_index()
+print(vendas_por_produto)
+
+# -------------------------------- Analise de clientes ----------------------------------------
+
+# Contagem de clientes por estado
+clientes_por_estado = df_combined.groupby('estado')['cliente_nome'].count().reset_index()
+clientes_por_estado = clientes_por_estado.rename(columns={'cliente_nome': 'Quantidade de Clientes'})
+
 
 
 
@@ -71,4 +80,6 @@ criar_grafico_top_10_clientes(clientes_lucrativos)
 
 plot_vendas_por_estado(vendas_por_estado)
 
-gerar_grafico_vendas_por_produto (df_combined)
+gerar_grafico_vendas_por_produto(vendas_por_produto)
+
+criar_grafico_contagem_clientes_estado(clientes_por_estado)
